@@ -1,11 +1,23 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://feendqwrkczannagkngk.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlZW5kcXdya2N6YW5uYWdrbmdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwNTgwOTUsImV4cCI6MjA2MzYzNDA5NX0.UoTLSpM9zGyveLGYleue5ILeONTXBPwcoWEeM_6joak';
+// Ensure this code runs only in a client-side environment
+const supabaseUrl = typeof window !== 'undefined' ? import.meta.env.VITE_SUPABASE_URL : undefined;
+const supabaseAnonKey = typeof window !== 'undefined' ? import.meta.env.VITE_SUPABASE_ANON_KEY : undefined;
 
-console.log('Initializing Supabase client with URL:', supabaseUrl);
+if (typeof window !== 'undefined') {
+  if (!supabaseUrl) {
+    console.warn('Supabase URL is not set. Please check your .env file for VITE_SUPABASE_URL.');
+  }
+  if (!supabaseAnonKey) {
+    console.warn('Supabase Anon Key is not set. Please check your .env file for VITE_SUPABASE_ANON_KEY.');
+  }
+  console.log('Attempting to initialize Supabase client with URL:', supabaseUrl);
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+
+// Initialize the client, even if the URL/key might be missing,
+// to allow for graceful failure or later configuration.
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
