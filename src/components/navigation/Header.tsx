@@ -11,12 +11,12 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth(); // Changed logout to signOut
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
+    signOut(); // Changed logout() to signOut()
     navigate('/login');
   };
 

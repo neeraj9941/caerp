@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { Mail, Lock, LogIn } from 'lucide-react';
@@ -103,6 +103,14 @@ const Login: React.FC = () => {
             </button>
           </div>
         </form>
+        <div className="text-sm flex justify-between items-center mt-4">
+          <Link to="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+            Forgot your password?
+          </Link>
+          <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+            Don't have an account? Sign up
+          </Link>
+        </div>
       </div>
     </div>
   );

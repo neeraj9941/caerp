@@ -115,11 +115,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setAuthLoading(true);
 
         if (event === 'SIGNED_IN' && session?.user) {
-          setUser(session.user);
+          setUser(session.user); // Set user first
           try {
-            await fetchProfile(session.user.id, true);
+            const profileData = await fetchProfile(session.user.id, true); // Pass true for new user context
+            if (profileData && profileData.status === 'inactive') {
+              toast.error('Your account is inactive. Please contact an administrator.');
+              await supabase.auth.signOut(); // Sign out from Supabase
+              setUser(null); // Clear user from context
+              setProfile(null); // Clear profile from context
+              // No navigation or further action needed here, UI should react to null user/profile
+            }
+            // If active, profile is already set by fetchProfile, and user is set above.
           } catch (err: any) {
-            console.error("Failed to fetch profile on SIGNED_IN:", err.message);
+            console.error("Failed to fetch or process profile on SIGNED_IN:", err.message);
+            // If fetchProfile itself throws, user might still be set.
+            // Consider signing out if profile is essential and fetch failed critically.
+            // For now, error is logged, and profile might be null.
+            // toast.error('Could not load your profile details.'); // Avoid double toast if fetchProfile already showed one
+            // await supabase.auth.signOut();
+            // setUser(null);
+            // setProfile(null);
           }
         } else if (event === 'SIGNED_OUT') {
           setUser(null);

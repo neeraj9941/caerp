@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { supabase } from '../../lib/supabase'; // Import supabase
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -18,13 +19,20 @@ const ForgotPassword: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Mock password reset request - would be replaced with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setSubmitted(true);
-      toast.success('Password reset instructions sent to your email');
-    } catch (error) {
-      toast.error('Failed to send reset instructions. Please try again.');
-      console.error('Password reset error:', error);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        console.error('Password reset error:', error);
+        toast.error(error.message || 'Failed to send reset instructions. Please try again.');
+      } else {
+        setSubmitted(true);
+        toast.success('Password reset instructions sent to your email.');
+      }
+    } catch (error: any) { // Catch any unexpected errors during the async operation
+      console.error('Password reset unexpected error:', error);
+      toast.error(error.message || 'An unexpected error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

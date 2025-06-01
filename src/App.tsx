@@ -8,6 +8,7 @@ import AuthLayout from './layouts/AuthLayout';
 
 // Pages
 import Login from './pages/auth/Login';
+import ResetPasswordPage from './pages/auth/ResetPassword'; // Added import
 import AdminDashboard from './pages/admin/Dashboard';
 import Users from './pages/admin/Users';
 import UserForm from './pages/admin/UserForm';
@@ -41,6 +42,7 @@ const App: React.FC = () => {
             {/* Auth Routes */}
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<Login />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} /> {/* Added route */}
             </Route>
             
             {/* Admin routes */}
